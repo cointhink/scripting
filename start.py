@@ -23,7 +23,7 @@ if __name__ == "__main__":
         print("### auth ###")
         auth = json.load(json_data)
         print("### connect ###")
-        ws = websocket.WebSocketApp("ws://10.254.92.1:8085/",
+        ws = websocket.WebSocketApp("ws://10.0.0.1:8085/",
                                   on_message = on_message,
                                   on_error = on_error,
                                   on_close = on_close)
