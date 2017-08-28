@@ -22,7 +22,6 @@ def on_open(ws):
     script.init(cointhink)
 
 if __name__ == "__main__":
-    print("basicConfig")
     logging.basicConfig()
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
