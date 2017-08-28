@@ -18,7 +18,7 @@ def on_close(ws):
 
 def on_open(ws):
     logger.info("### open ###")
-    cointhink.log('Algorithm Run # started')
+    cointhink.log('Algorithm Run #'+auth['AlgorunId']+' started')
     script.init(cointhink)
 
 if __name__ == "__main__":
