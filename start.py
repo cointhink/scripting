@@ -17,6 +17,7 @@ def on_close(ws):
 
 def on_open(ws):
     logger.info("### open ###")
+    cointhink.init(auth, ws)
 
 if __name__ == "__main__":
     logging.basicConfig()
@@ -24,7 +25,6 @@ if __name__ == "__main__":
     logger.setLevel(logging.INFO)
 
     with open('auth.json') as json_data:
-        logger.info("### auth ###")
         auth = json.load(json_data)
         url = "ws://10.0.0.1:8085/"
         logger.info("### connecting %s ###", url)
@@ -32,8 +32,6 @@ if __name__ == "__main__":
                                   on_message = on_message,
                                   on_error = on_error,
                                   on_close = on_close)
-        logger.info("### script init ###")
-        cointhink.init(auth, ws)
         ws.on_open = on_open
         logger.info("### ws loop ###")
         ws.run_forever()

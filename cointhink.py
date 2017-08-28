@@ -1,7 +1,8 @@
+import sys
+import logging
 from google.protobuf.json_format import MessageToJson
 import algolog_pb2
 import rpc_pb2
-import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -13,7 +14,7 @@ def init(_auth, _ws):
     log('init '+auth['AlgorunId'])
     import script
     logger.info("init")
-    script.init(cointhink)
+    script.init(sys.modules[__name__])
 
 def on_message(msg):
     logger.info(msg)
