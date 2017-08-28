@@ -3,17 +3,22 @@ import algolog_pb2
 import rpc_pb2
 import logging
 
-logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 def init(_auth, _ws):
     global auth, ws
     ws = _ws
     auth = _auth
+    logger.info("init")
+
+def on_message(msg):
+    logger.info(msg)
 
 def log(msg):
-    print("### log ###")
+    logger.info("### log ###")
     alog = algolog_pb2.Algolog()
-    print(auth)
+    logger.info(auth)
     alog.AlgorunId = auth['AlgorunId']
     alog.Event = 'start'
     alog.Level = 'info'
@@ -23,5 +28,5 @@ def log(msg):
     rpc.Method = "Algolog"
     rpc.Object.Pack(alog)
     json_msg = MessageToJson(rpc)
-    print(json_msg)
+    logger.info(json_msg)
     ws.send(json_msg)

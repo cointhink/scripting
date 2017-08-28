@@ -1,7 +1,8 @@
 # buy-weekly-tue
 
-def data(context):
-    context.log("some data")
-
 def init(context):
-    context.log("user script init")
+    context.log("init: go")
+
+def eachMinute(context):
+    context.log("eachMinute go")
+
