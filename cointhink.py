@@ -10,10 +10,15 @@ def init(_auth, _ws):
     global auth, ws
     ws = _ws
     auth = _auth
+    log('init '+auth['AlgorunId'])
+    import script
     logger.info("init")
+    script.init(cointhink)
 
 def on_message(msg):
     logger.info(msg)
+    if msg['method'] == 'TickTock':
+        script.eachMinute()
 
 def log(msg):
     logger.info("### log ###")

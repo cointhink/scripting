@@ -1,6 +1,5 @@
 import websocket
 import json
-import script
 import cointhink
 import logging
 
@@ -18,8 +17,6 @@ def on_close(ws):
 
 def on_open(ws):
     logger.info("### open ###")
-    cointhink.log('Algorithm Run #'+auth['AlgorunId']+' started')
-    script.init(cointhink)
 
 if __name__ == "__main__":
     logging.basicConfig()
