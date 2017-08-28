@@ -1,9 +1,12 @@
 import sys
 import logging
-from google.protobuf.json_format import MessageToJson
+from google.protobuf.json_format import MessageToJson, Parse
 import algolog_pb2
+import tick_tock_pb2
 import rpc_pb2
 import script
+import json
+import datetime
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -19,7 +22,11 @@ def init(_auth, _ws):
 def on_message(msg):
     logger.info(msg)
     if msg['method'] == 'TickTock':
-        script.eachMinute(sys.modules[__name__])
+        pb_json = json.dumps(msg['object'])
+        ticktock = tick_tock_pb2.TickTock()
+        Parse(pb_json, ticktock)
+        ttime = datetime.datetime.strptime(ticktock.Time, "%Y-%m-%dT%H:%M:%SZ")
+        script.eachDay(sys.modules[__name__], ttime)
 
 def log(msg):
     logger.info("### log ###")
