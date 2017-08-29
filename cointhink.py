@@ -3,6 +3,7 @@ import logging
 from google.protobuf.json_format import MessageToJson, Parse
 import algolog_pb2
 import tick_tock_pb2
+import trade_signal_pb2
 import rpc_pb2
 import script
 import json
@@ -36,10 +37,20 @@ def log(msg):
     alog.Event = 'start'
     alog.Level = 'info'
     alog.Message = msg
+    rpc("Algolog", alog)
+
+def rpc(method, payload):
     rpc = rpc_pb2.Rpc()
     rpc.Token = auth['Token']
-    rpc.Method = "Algolog"
-    rpc.Object.Pack(alog)
+    rpc.Method = method
+    rpc.Object.Pack(payload)
     json_msg = MessageToJson(rpc)
     logger.info(json_msg)
     ws.send(json_msg)
+
+def trade():
+    trade = trade_signal_pb2.TradeSignal()
+    trade.Market = "BTC/USD"
+    print(trade)
+    rpc("TradeSignal", trade)
+
