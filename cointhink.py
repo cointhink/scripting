@@ -12,10 +12,11 @@ import datetime
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-def init(_auth, _ws):
-    global auth, ws
+def init(_auth, _ws, _settings):
+    global auth, ws, settings
     ws = _ws
     auth = _auth
+    settings = _settings
     log('init '+auth['AlgorunId'])
     script.init(sys.modules[__name__])
 
