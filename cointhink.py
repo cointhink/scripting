@@ -17,11 +17,10 @@ def init(_auth, _ws):
     ws = _ws
     auth = _auth
     log('init '+auth['AlgorunId'])
-    logger.info("init %s", auth['AlgorunId'])
     script.init(sys.modules[__name__])
 
 def on_message(msg):
-    logger.info(msg)
+    logger.info("recv %s", msg)
     if msg['method'] == 'TickTock':
         pb_json = json.dumps(msg['object'])
         ticktock = tick_tock_pb2.TickTock()
@@ -30,7 +29,7 @@ def on_message(msg):
         script.eachDay(sys.modules[__name__], ttime)
 
 def log(msg):
-    logger.info("### log ###")
+    logger.info("log: "+msg)
     alog = algolog_pb2.Algolog()
     logger.info(auth)
     alog.AlgorunId = auth['AlgorunId']
@@ -45,12 +44,12 @@ def rpc(method, payload):
     rpc.Method = method
     rpc.Object.Pack(payload)
     json_msg = MessageToJson(rpc)
-    logger.info(json_msg)
+    logger.info("RPC %s", json.dumps(json.loads(json_msg), separators=(',', ':')))
     ws.send(json_msg)
 
 def trade():
     trade = trade_signal_pb2.TradeSignal()
     trade.Market = "BTC/USD"
-    print(trade)
+    log("trade() "+str(trade))
     rpc("TradeSignal", trade)
 
