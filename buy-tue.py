@@ -1,9 +1,9 @@
 # buy-weekly-tue
 
 def init(cointhink):
-    cointhink.log("init: go")
+    cointhink.log("script init")
     cointhink.trade()
 
 def eachDay(cointhink, date):
-    cointhink.log("eachDay go "+date.strftime("%Y-%m-%d %H:%M:%S"))
-    trade()
+    cointhink.log("eachDay "+date.strftime("%Y-%m-%d %H:%M:%S"))
+    cointhink.trade()
