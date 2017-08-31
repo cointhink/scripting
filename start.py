@@ -9,8 +9,8 @@ def on_message(ws, message):
     cointhink.on_message(payload)
 
 def on_error(ws, error):
-    logger.info("### error ###")
-    logger.info(error)
+    logger.info("### error: %s", error)
+    cointhink.log("### error: "+str(error))
 
 def on_close(ws):
     logger.info("### closed ###")
