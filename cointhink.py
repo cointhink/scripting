@@ -5,6 +5,7 @@ import algolog_pb2
 import tick_tock_pb2
 import trade_signal_pb2
 import notify_pb2
+import market_prices_pb2
 import rpc_pb2
 import script
 import json
@@ -28,7 +29,12 @@ def on_message(msg):
         ticktock = tick_tock_pb2.TickTock()
         Parse(pb_json, ticktock)
         ttime = datetime.datetime.strptime(ticktock.Time, "%Y-%m-%dT%H:%M:%SZ")
-        script.eachDay(sys.modules[__name__], ttime)
+        script.each_day(sys.modules[__name__], ttime)
+    if msg['method'] == 'MarketPrices':
+        pb_json = json.dumps(msg['object'])
+        prices = market_prices_pb2.MarketPrices()
+        Parse(pb_json, prices)
+        script.market_prices(sys.modules[__name__], prices)
 
 def log(msg):
     logger.info("log: "+msg)
