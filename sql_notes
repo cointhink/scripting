@@ -1,0 +1,2 @@
+\set content `cat buy-tue.py`
+update algorithms set code = :'content' where id = 'buy-weekly-tue';
