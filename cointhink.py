@@ -1,12 +1,8 @@
 import sys
 import logging
 from google.protobuf.json_format import MessageToJson, Parse
-import algolog_pb2
-import tick_tock_pb2
-import trade_signal_pb2
-import notify_pb2
-import market_prices_pb2
-import rpc_pb2
+from proto import algolog_pb2, tick_tock_pb2, trade_signal_pb2
+from proto import notify_pb2, rpc_pb2, market_prices_pb2
 import script
 import json
 import datetime
