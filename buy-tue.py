@@ -2,7 +2,7 @@
 
 def init(cointhink):
     cointhink.log("settings: "+str(cointhink.settings))
-    cointhink.trade()
+    cointhink.notify("buy-tue begin")
 
 def eachDay(cointhink, date):
     now = date.strftime("%Y-%m-%d %H:%M:%S")

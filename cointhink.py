@@ -4,6 +4,7 @@ from google.protobuf.json_format import MessageToJson, Parse
 import algolog_pb2
 import tick_tock_pb2
 import trade_signal_pb2
+import notify_pb2
 import rpc_pb2
 import script
 import json
@@ -54,3 +55,11 @@ def trade():
     log("trade() "+str(trade))
     rpc("TradeSignal", trade)
 
+def notify(summary, detail=None):
+    summary = str(summary)
+    notify = notify_pb2.Notify()
+    notify.Summary = summary
+    if detail:
+        notify.Detail = detail
+    log("notify: "+summary)
+    rpc("Notify", notify)
