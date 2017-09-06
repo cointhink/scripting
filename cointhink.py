@@ -25,12 +25,14 @@ def on_message(msg):
         ticktock = tick_tock_pb2.TickTock()
         Parse(pb_json, ticktock)
         ttime = datetime.datetime.strptime(ticktock.Time, "%Y-%m-%dT%H:%M:%SZ")
-        script.each_day(sys.modules[__name__], ttime)
+        if hasattr(script, 'each_day'):
+            script.each_day(sys.modules[__name__], ttime)
     if msg['method'] == 'MarketPrices':
         pb_json = json.dumps(msg['object'])
         prices = market_prices_pb2.MarketPrices()
         Parse(pb_json, prices)
-        script.market_prices(sys.modules[__name__], prices)
+        if hasattr(script, 'market_prices'):
+            script.market_prices(sys.modules[__name__], prices)
 
 def log(msg):
     logger.info("log: "+msg)
