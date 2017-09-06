@@ -19,7 +19,7 @@ def init(_auth, _ws, _settings):
     if hasattr(script, 'init'):
         script.init(sys.modules[__name__])
     else:
-        log('warning: script has no init(auth, socket, settings) method')
+        log('warning: script has no init(cointhink) method')
 
 def on_message(msg):
     logger.info("recv %s", msg)
