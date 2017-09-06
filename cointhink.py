@@ -16,7 +16,10 @@ def init(_auth, _ws, _settings):
     auth = _auth
     settings = _settings
     log('init '+auth['AlgorunId'])
-    script.init(sys.modules[__name__])
+    if hasattr(script, 'init'):
+        script.init(sys.modules[__name__])
+    else:
+        log('warning: script has no init(auth, socket, settings) method')
 
 def on_message(msg):
     logger.info("recv %s", msg)
