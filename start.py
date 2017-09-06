@@ -14,6 +14,7 @@ def on_error(ws, error):
 
 def on_close(ws):
     logger.info("### closed ###")
+    cointhink.log("### connection lost")
 
 def on_open(ws):
     logger.info("### open ###")
