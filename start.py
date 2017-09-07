@@ -46,8 +46,8 @@ if __name__ == "__main__":
     with open('settings.json') as json_data:
         settings = json.load(json_data)
     made_connection = False
+    ws = setup_socket()
     while True:
-        ws = setup_socket()
         ws.run_forever()
         logger.info("### connection lost. waiting 1 second")
         time.sleep(1)
