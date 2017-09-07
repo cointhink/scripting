@@ -12,16 +12,18 @@ def market_prices(cointhink, prices):
     for price in prices.Prices:
         new_price = float(price.Amount)
         received_at = datetime.datetime.strptime(price.ReceivedAt, "%Y-%m-%dT%H:%M:%SZ")
-        if price.Market.lower() == "btc/usd":
+        if price.Market.lower() == cointhink.settings['Market']:
           if btc_last:
             price_delta = new_price - btc_last[0]
-            chg_percent = price_delta/new_price
+            chg_price_ratio = price_delta / new_price
             chg_time = received_at - btc_last[1]
-            log_msg = "BTC price ${} changed ${:.4f} {:.1%} in {:.1f} mins".format(
-              new_price, price_delta, chg_percent, chg_time.seconds/60)
+            log_msg = "{} price ${} changed ${:.4f} {:.2%} in {:.1f} mins".format(
+              cointhink.settings['Market'], new_price, price_delta, chg_price_ratio, chg_time.seconds/60)
             cointhink.log(log_msg)
+            if chg_price_ratio > 0.01:
+              cointhink.notify(log_msg)
           else:
-            log_msg = "BTC first price ${}".format(new_price)
+            log_msg = "{} first price ${}".format(cointhink.settings['Market'], new_price)
             cointhink.log(log_msg)
           btc_last = (new_price, received_at)
 
