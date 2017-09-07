@@ -40,7 +40,6 @@ def on_message(msg):
 def log(msg):
     logger.info("log: "+msg)
     alog = algolog_pb2.Algolog()
-    logger.info(auth)
     alog.AlgorunId = auth['AlgorunId']
     alog.Event = 'start'
     alog.Level = 'info'
