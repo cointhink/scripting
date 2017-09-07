@@ -1,2 +1,7 @@
-\set content `cat buy-tue.py`
-update algorithms set code = :'content' where id = 'buy-weekly-tue';
+$ psql cointhink_dev
+[local] donp@cointhink_dev=# \set content `cat buy-tue.py`
+[local] donp@cointhink_dev=# update algorithms set code = :'content' where id = 'buy-weekly-tue';
+UPDATE 1
+
+\set content `cat signal-5%.py`
+update algorithms set code = :'content' where id = 'signal-5%';
