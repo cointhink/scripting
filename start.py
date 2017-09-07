@@ -3,6 +3,8 @@ import json
 import cointhink
 import logging
 import time
+import traceback
+import sys
 
 def on_message(ws, message):
     logger.info(message)
@@ -10,8 +12,12 @@ def on_message(ws, message):
     cointhink.on_message(payload)
 
 def on_error(ws, error):
-    # no cointhink.log here
-    logger.info("### error: %s", error)
+    tb = sys.exc_info()[2]
+    last_frame = traceback.extract_tb(tb)[-1]
+    err_nice = "error line {} in '{}': {} {}".format(
+        last_frame.lineno, last_frame.name , error, type(error))
+    logger.info("### "+err_nice)
+    cointhink.log(err_nice)
 
 def on_close(ws):
     # no cointhink.log here
