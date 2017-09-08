@@ -21,7 +21,7 @@ def market_prices(cointhink, prices):
               cointhink.settings['Market'], new_price, price_delta, chg_price_ratio,
               chg_time.seconds/60)
             cointhink.log(log_msg)
-            if chg_price_ratio > 0.01:
+            if chg_price_ratio > 0.002:
               cointhink.notify(log_msg)
           else:
             log_msg = "{} first price ${}".format(cointhink.settings['Market'], new_price)
