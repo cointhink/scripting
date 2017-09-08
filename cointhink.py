@@ -6,6 +6,7 @@ from proto import notify_pb2, rpc_pb2, market_prices_pb2
 import script
 import json
 import datetime
+import websocket
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -38,13 +39,17 @@ def on_message(msg):
             script.market_prices(sys.modules[__name__], prices)
 
 def log(msg):
+    global auth
     logger.info("log: "+msg)
-    alog = algolog_pb2.Algolog()
-    alog.AlgorunId = auth['AlgorunId']
-    alog.Event = 'start'
-    alog.Level = 'info'
-    alog.Message = msg
-    rpc("Algolog", alog)
+    if 'auth' in globals():
+        alog = algolog_pb2.Algolog()
+        alog.AlgorunId = auth['AlgorunId']
+        alog.Event = 'start'
+        alog.Level = 'info'
+        alog.Message = msg
+        rpc("Algolog", alog)
+    else:
+        logger.info("cointhink.log aborted. no auth data")
 
 def rpc(method, payload):
     rpc = rpc_pb2.Rpc()
@@ -53,7 +58,13 @@ def rpc(method, payload):
     rpc.Object.Pack(payload)
     json_msg = MessageToJson(rpc)
     logger.info("RPC %s", json.dumps(json.loads(json_msg), separators=(',', ':')))
-    ws.send(json_msg)
+    send(json_msg)
+
+def send(json_msg):
+    try:
+        ws.send(json_msg)
+    except websocket.WebSocketException as e:
+        print("abort ws.send "+str(e))
 
 def trade():
     trade = trade_signal_pb2.TradeSignal()
