@@ -17,7 +17,7 @@ def market_prices(cointhink, prices):
             price_delta = new_price - btc_last[0]
             chg_price_ratio = price_delta / new_price
             chg_time = received_at - btc_last[1]
-            log_msg = "{} price ${} changed ${:.4f} {:.2%} in {:.1f} mins".format(
+            log_msg = "{} price ${:.2f} changed ${:.4f} {:.2%} in {:.1f} mins".format(
               cointhink.settings['Market'], new_price, price_delta, chg_price_ratio,
               chg_time.seconds/60)
             cointhink.log(log_msg)
