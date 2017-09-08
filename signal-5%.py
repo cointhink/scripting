@@ -18,7 +18,8 @@ def market_prices(cointhink, prices):
             chg_price_ratio = price_delta / new_price
             chg_time = received_at - btc_last[1]
             log_msg = "{} price ${} changed ${:.4f} {:.2%} in {:.1f} mins".format(
-              cointhink.settings['Market'], new_price, price_delta, chg_price_ratio, chg_time.seconds/60)
+              cointhink.settings['Market'], new_price, price_delta, chg_price_ratio,
+              chg_time.seconds/60)
             cointhink.log(log_msg)
             if chg_price_ratio > 0.01:
               cointhink.notify(log_msg)
@@ -28,4 +29,7 @@ def market_prices(cointhink, prices):
           btc_last = (new_price, received_at)
 
 def each_day(cointhink, date):
-    cointhink.log("Day report - btc_price_avg "+str(btc_price_avg))
+    log_msg = "Day report"
+    if btc_last:
+      log_msg = log_msg + "btc_last price {} date {}".format(btc_last[0], btc_last[1])
+    cointhink.log(log_msg)
