@@ -5,7 +5,7 @@ btc_last = False
 
 def init(cointhink):
     cointhink.log("settings: "+str(cointhink.settings))
-    cointhink.notify("signal-0.2% begin.")
+    cointhink.notify("signal-0.5% begin.")
 
 def market_prices(cointhink, prices):
     global btc_last
@@ -21,7 +21,7 @@ def market_prices(cointhink, prices):
               cointhink.settings['Market'], new_price, price_delta, chg_price_ratio,
               chg_time.seconds/60)
             cointhink.log(log_msg)
-            if abs(chg_price_ratio) > 0.002:
+            if abs(chg_price_ratio) > 0.005:
               cointhink.notify(log_msg)
           else:
             log_msg = "{} first price ${}".format(cointhink.settings['Market'], new_price)
@@ -29,7 +29,7 @@ def market_prices(cointhink, prices):
           btc_last = (new_price, received_at)
 
 def each_day(cointhink, date):
-    log_msg = "Day report"
+    log_msg = "Day report:"
     if btc_last:
-      log_msg = log_msg + "btc_last price {} date {}".format(btc_last[0], btc_last[1])
+      log_msg = log_msg + " btc_last price {} date {}".format(btc_last[0], btc_last[1])
     cointhink.log(log_msg)
