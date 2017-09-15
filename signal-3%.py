@@ -1,12 +1,12 @@
-# signal-1%
+# signal-3%
 import datetime
 
 btc_last = False
-notice_minimum = 0.01
+notice_minimum = 0.03
 
 def init(cointhink):
     cointhink.log("settings: "+str(cointhink.settings))
-    cointhink.notify("signal-1% begin.")
+    cointhink.notify("signal-3% begin.")
 
 def market_prices(cointhink, prices):
     global btc_last
