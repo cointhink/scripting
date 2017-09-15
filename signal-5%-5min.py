@@ -5,7 +5,7 @@ btc_last = False
 
 def init(cointhink):
     cointhink.log("settings: "+str(cointhink.settings))
-    cointhink.notify("signal-0.5% begin.")
+    cointhink.notify("signal-0.5%-5min begin.")
 
 def market_prices(cointhink, prices):
     global btc_last
