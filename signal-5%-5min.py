@@ -1,4 +1,4 @@
-# signal-5%
+# signal-0.5%-5min
 import datetime
 
 btc_last = False
