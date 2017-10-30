@@ -12,29 +12,33 @@ def on_message(ws, message):
     cointhink.on_message(payload)
 
 def on_error(ws, error):
-    tb = sys.exc_info()[2]
-    last_frame = traceback.extract_tb(tb)[-1]
-    err_nice = "error line {} in '{}': {} {}".format(
-        last_frame.lineno, last_frame.name , error, type(error))
-    logger.info("### "+err_nice)
-    cointhink.log(err_nice)
+    if isinstance(error, KeyboardInterrupt):
+      raise error
+    else:
+      tb = sys.exc_info()[2]
+      last_frame = traceback.extract_tb(tb)[-1]
+      err_nice = "error {} line {} in '{}': {} {}".format(
+          last_frame.filename, last_frame.lineno, last_frame.name , error, type(error))
+      logger.info("### start.py: "+err_nice)
+      if not isinstance(error, IOError):
+        cointhink.log(err_nice)
 
 def on_close(ws):
     # no cointhink.log here
-    logger.info("### closed ###")
+    logger.info("### start.py: closed ###")
 
 def on_open(ws):
     global made_connection
     if made_connection:
-        logger.info("### open (reconnect, skipping init)")
+        logger.info("### start.py: open (reconnect, skipping init)")
     else:
         made_connection = True
-        logger.info("### open ###")
+        logger.info("### start.py: open ###")
         cointhink.init(auth, ws, settings)
 
 def setup_socket():
     url = "ws://10.0.0.1:8085/"
-    logger.info("### connecting %s ###", url)
+    logger.info("### start.py: connecting %s ###", url)
     ws = websocket.WebSocketApp(url,
                               on_message = on_message,
                               on_error = on_error,
@@ -54,6 +58,13 @@ if __name__ == "__main__":
     made_connection = False
     ws = setup_socket()
     while True:
+      try:
         ws.run_forever()
-        logger.info("### connection lost. waiting 1 second")
+        logger.info("### start.py: connection lost. waiting 1 second")
         time.sleep(1)
+      except KeyboardInterrupt:
+        logger.info("### start.py: stopping")
+        break
+      except:
+        e = sys.exc_info()[0]
+        logger.error("### start.py: ws.run_forever aborted: "+str(e))

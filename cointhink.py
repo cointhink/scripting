@@ -64,7 +64,7 @@ def send(json_msg):
     try:
         ws.send(json_msg)
     except websocket.WebSocketException as e:
-        print("abort ws.send "+str(e))
+        logger.error("### cointhink.py: ws.send aborted: "+str(e)+" for "+json_msg)
 
 def trade():
     trade = trade_signal_pb2.TradeSignal()

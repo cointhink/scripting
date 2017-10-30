@@ -3,5 +3,10 @@ $ psql cointhink_dev
 [local] donp@cointhink_dev=# update algorithms set code = :'content' where id = 'buy-weekly-tue';
 UPDATE 1
 
+# b11c - production donp
+insert into algorithms values ('signal-3%', now(), 'accounts-b11c-b1995fa2cc82', 'ready', 'javascript', '', 'Alert any time the price changes by 3% since the last alert.');
+# accounts-b8b0-6d34a035a65e - jewel donp
+
+
 \set content `cat signal-5%.py`
 update algorithms set code = :'content' where id = 'signal-5%';
