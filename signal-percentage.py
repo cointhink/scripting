@@ -2,7 +2,7 @@
 import datetime
 
 btc_last = False
-signal_percentage = 0
+signal_percentage = 100
 
 def init(cointhink):
     cointhink.log("settings: "+str(cointhink.settings))
@@ -24,7 +24,7 @@ def market_prices(cointhink, prices):
               cointhink.settings['market'], new_price, price_delta, chg_price_ratio,
               time_words(chg_time))
             cointhink.log(log_msg)
-            if abs(chg_price_ratio) > signal_percentage:
+            if abs(chg_price_ratio) > (signal_percentage/100.0):
               cointhink.notify(log_msg)
           else:
             log_msg = "{} first price ${}".format(cointhink.settings['market'], new_price)
@@ -43,4 +43,10 @@ def time_words(time):
     if time.seconds > 60:
       value = time.seconds / 60
       unit = "minutes"
+    if time.seconds > 60 * 60:
+      value = time.seconds / 60 / 60
+      unit = "hours"
+    if time.seconds > 60 * 60 * 24:
+      value = time.seconds / 60 / 60 / 24
+      unit = "days"
     return "{:.1f} {}".format(value, unit)
