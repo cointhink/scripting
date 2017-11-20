@@ -9,7 +9,6 @@ def init(cointhink):
     cointhink.log("settings: "+str(cointhink.settings))
     cointhink.notify("price-percent begin.")
     signal_ratio = float(cointhink.settings['percent_change'])/100.0
-    cointhink.log("percentage {}".format(signal_ratio))
 
 def market_prices(cointhink, prices):
     global price_last
