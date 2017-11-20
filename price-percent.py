@@ -2,16 +2,18 @@
 import datetime
 
 price_last = False
-signal_percentage = 100
+signal_ratio = 1.0
 
 def init(cointhink):
+    global signal_ratio
     cointhink.log("settings: "+str(cointhink.settings))
     cointhink.notify("price-percent begin.")
-    signal_percentage = float(cointhink.settings['percent_change'])
+    signal_ratio = float(cointhink.settings['percent_change'])/100.0
+    cointhink.log("percentage {}".format(signal_ratio))
 
 def market_prices(cointhink, prices):
     global price_last
-    global signal_percentage
+    global signal_ratio
     for price in prices.Prices:
         new_price = float(price.Amount)
         received_at = datetime.datetime.strptime(price.ReceivedAt, "%Y-%m-%dT%H:%M:%SZ")
@@ -20,11 +22,11 @@ def market_prices(cointhink, prices):
             price_delta = new_price - price_last[0]
             chg_price_ratio = price_delta / new_price
             chg_time = received_at - price_last[1]
-            log_msg = "{} price ${:.2f} changed ${:.2f} {:.2%} in {}".format(
+            log_msg = "{} price ${:.2f} changed ${:.2f} {:.2%} of {:.2%} in {}".format(
               cointhink.settings['market'], new_price, price_delta, chg_price_ratio,
-              time_words(chg_time))
+              signal_ratio, time_words(chg_time))
             cointhink.log(log_msg)
-            if abs(chg_price_ratio) > (signal_percentage/100.0):
+            if abs(chg_price_ratio) >= signal_ratio:
               cointhink.notify(log_msg)
               price_last = (new_price, received_at)
           else:
@@ -34,8 +36,8 @@ def market_prices(cointhink, prices):
 
 def each_day(cointhink, date):
     log_msg = "Day report:"
-    if btc_last:
-      log_msg = log_msg + " btc_last price {} date {}".format(btc_last[0], btc_last[1])
+    if price_last:
+      log_msg = log_msg + " price_last price {} date {}".format(price_last[0], price_last[1])
     cointhink.log(log_msg)
 
 def time_words(time):
