@@ -1,6 +1,5 @@
 import websocket
 import json
-import cointhink
 import logging
 import time
 import traceback
@@ -59,6 +58,7 @@ if __name__ == "__main__":
     ws = setup_socket()
     while True:
       try:
+        import cointhink
         ws.run_forever()
         logger.info("### start.py: connection lost. waiting 1 second")
         time.sleep(1)
@@ -66,5 +66,7 @@ if __name__ == "__main__":
         logger.info("### start.py: stopping")
         break
       except:
-        e = sys.exc_info()[0]
-        logger.error("### start.py: ws.run_forever aborted: "+str(e))
+        e = sys.exc_info()
+        logger.error("### start.py: ws.run_forever aborted: "+str(e[0]))
+        logger.error(traceback.format_tb(e[2]))
+        time.sleep(2)

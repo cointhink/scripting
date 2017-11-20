@@ -4,7 +4,7 @@ $ psql cointhink_dev
 UPDATE 1
 
 # b11c - production donp
-insert into algorithms values ('signal-3%', now(), 'accounts-b11c-b1995fa2cc82', 'ready', 'javascript', '', 'Alert any time the price changes by 3% since the last alert.');
+insert into algorithms values ('price-correlation', now(), 'accounts-b11c-b1995fa2cc82', 'ready', 'javascript', '', 'Alert any time the price changes by 3% since the last alert.', '{}');
 # accounts-b8b0-6d34a035a65e - jewel donp
 
 

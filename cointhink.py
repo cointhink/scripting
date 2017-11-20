@@ -3,7 +3,6 @@ import logging
 from google.protobuf.json_format import MessageToJson, Parse
 from proto import algolog_pb2, tick_tock_pb2, trade_signal_pb2
 from proto import notify_pb2, rpc_pb2, market_prices_pb2
-import script
 import json
 import datetime
 import websocket
@@ -17,11 +16,11 @@ def init(_auth, _ws, _settings):
     auth = _auth
     settings = _settings
     log('init '+auth['AlgorunId'])
+    import script
     if hasattr(script, 'init'):
         script.init(sys.modules[__name__])
     else:
         log('warning: script has no init(cointhink) method')
-
 def on_message(msg):
     logger.info("recv %s", msg)
     if msg['method'] == 'TickTock':
