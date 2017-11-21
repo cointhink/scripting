@@ -14,24 +14,30 @@ def market_prices(cointhink, prices):
     global price_last
     global signal_ratio
     for price in prices.Prices:
-        new_price = float(price.Amount)
-        received_at = datetime.datetime.strptime(price.ReceivedAt, "%Y-%m-%dT%H:%M:%SZ")
-        if price.Market.lower() == cointhink.settings['market']:
-          if price_last:
-            price_delta = new_price - price_last[0]
-            chg_price_ratio = price_delta / new_price
-            chg_time = received_at - price_last[1]
-            log_msg = "{} price ${:.2f} changed ${:.2f} {:.2%} of {:.2%} in {}".format(
-              cointhink.settings['market'], new_price, price_delta, chg_price_ratio,
-              signal_ratio, time_words(chg_time))
-            cointhink.log(log_msg)
-            if abs(chg_price_ratio) >= signal_ratio:
-              cointhink.notify(log_msg)
+        exchange = cointhink.settings['exchange']
+        if price.Exchange.lower() == exchange:
+          market = cointhink.settings['market']
+          if price.Market.lower() == market:
+            received_at = datetime.datetime.strptime(price.ReceivedAt, "%Y-%m-%dT%H:%M:%SZ")
+            new_price = float(price.Amount)
+            if price_last:
+              price_delta = new_price - price_last[0]
+              chg_price_ratio = price_delta / new_price
+              chg_time = received_at - price_last[1]
+              updown = "DOWN"
+              if chg_price_ratio >= 0:
+                updown = "UP"
+              log_msg = "{} ${:.2f} {} ${:.2f} {:.2%} of {:.2%} in {}".format(
+                cointhink.settings['market'], new_price, updown, price_delta, chg_price_ratio,
+                signal_ratio, time_words(chg_time))
+              cointhink.log(log_msg)
+              if abs(chg_price_ratio) >= signal_ratio:
+                cointhink.notify(log_msg)
+                price_last = (new_price, received_at)
+            else:
+              log_msg = "{} first price ${}".format(cointhink.settings['market'], new_price)
+              cointhink.log(log_msg)
               price_last = (new_price, received_at)
-          else:
-            log_msg = "{} first price ${}".format(cointhink.settings['market'], new_price)
-            cointhink.log(log_msg)
-            price_last = (new_price, received_at)
 
 def each_day(cointhink, date):
     log_msg = "Day report:"
