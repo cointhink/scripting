@@ -24,9 +24,9 @@ def market_prices(cointhink, prices):
               price_delta = new_price - price_last[0]
               chg_price_ratio = price_delta / new_price
               chg_time = received_at - price_last[1]
-              updown = "DOWN"
+              updown = "down"
               if chg_price_ratio >= 0:
-                updown = "UP"
+                updown = "up"
               log_msg = "{} ${:.2f} {} ${:.2f} {:.2%} of {:.2%} in {}".format(
                 cointhink.settings['market'], new_price, updown, price_delta, chg_price_ratio,
                 signal_ratio, time_words(chg_time))
