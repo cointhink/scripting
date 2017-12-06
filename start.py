@@ -34,6 +34,7 @@ def on_open(ws):
         made_connection = True
         logger.info("### start.py: open ###")
         cointhink.init(auth, ws, settings)
+    cointhink.heartbeat()
 
 def setup_socket():
     url = "ws://10.0.0.1:8085/"
