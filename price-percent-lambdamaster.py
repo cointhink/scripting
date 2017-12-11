@@ -10,7 +10,7 @@ def init(cointhink):
     cointhink.notify("price-percent-lambdamaster begin.")
     signal_ratio = float(cointhink.settings['percent_change'])/100.0
 
-def market_prices_auth(auth, cointhink, prices):
+def market_prices_auth(token, cointhink, prices):
     global price_last
     global signal_ratio
     for price in prices.Prices:
@@ -30,20 +30,20 @@ def market_prices_auth(auth, cointhink, prices):
               log_msg = "{} ${:.2f} {} ${:.2f} {:.2%} of {:.2%} in {}".format(
                 cointhink.settings['market'], new_price, updown, price_delta, chg_price_ratio,
                 signal_ratio, time_words(chg_time))
-              cointhink.auth.log(auth, log_msg)
+              cointhink.auth.log(token, log_msg)
               if abs(chg_price_ratio) >= signal_ratio:
-                cointhink.auth.notify(auth, log_msg)
+                cointhink.auth.notify(token, log_msg)
                 price_last = (new_price, received_at)
             else:
               log_msg = "{} first price ${}".format(cointhink.settings['market'], new_price)
               cointhink.auth.log(auth, log_msg)
               price_last = (new_price, received_at)
 
-def each_day_auth(auth, cointhink, date):
+def each_day_auth(token, cointhink, date):
     log_msg = "Day report:"
     if price_last:
       log_msg = log_msg + " price_last price {} date {}".format(price_last[0], price_last[1])
-    cointhink.auth.log(auth, log_msg)
+    cointhink.auth.log(token, log_msg)
 
 def time_words(time):
     value = time.seconds

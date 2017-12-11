@@ -1,7 +1,7 @@
 import logging
 import json
 from google.protobuf.json_format import MessageToJson
-from proto import rpc_pb2, algolog_pb2
+from proto import rpc_pb2, algolog_pb2, market_prices_pb2
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -16,6 +16,16 @@ def init(_credential, _ws, module):
         script.init(module)
     else:
         log('warning: script has no init(cointhink) method')
+
+def lambda_dispatch(_lambda):
+    #pb_json = json.dumps(_lambda.Object)
+    pb_json = MessageToJson(_lambda.Object)
+    if _lambda.Method == "MarketPrices":
+        prices = market_prices_pb2.MarketPrices()
+        Parse(pb_json, prices)
+        if hasattr(script, 'market_prices_auth'):
+            ct = { "settings": _lambda.Settings }
+            script.market_prices_auth(_lambda.Token, ct, prices)
 
 def rpc(token, method, payload):
     global logger

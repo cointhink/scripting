@@ -22,8 +22,7 @@ def on_message(msg):
     pb_json = json.dumps(msg['object'])
     if msg['method'] == 'Lambda':
         _lambda = lambda_pb2.Lambda()
-        lambda_dispatch(_lambda)
-
+        auth.lambda_dispatch(_lambda)
     if msg['method'] == 'TickTock':
         ticktock = tick_tock_pb2.TickTock()
         Parse(pb_json, ticktock)
@@ -35,14 +34,6 @@ def on_message(msg):
         Parse(pb_json, prices)
         if hasattr(auth.script, 'market_prices'):
             auth.script.market_prices(sys.modules[__name__], prices)
-
-def lambda_dispatch(_lambda):
-    #pb_json = json.dumps(_lambda.Object)
-    pb_json = MessageToJson(_lambda.Object)
-    if _lambda.Method == "MarketPrices":
-        prices = market_prices_pb2.MarketPrices()
-        Parse(pb_json, prices)
-        auth.script.market_prices_auth.credential(_lambda.Token, sys.modules[__name__], prices)
 
 def log(msg):
     auth.logger.info("log: "+msg)
