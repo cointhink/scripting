@@ -36,14 +36,8 @@ def on_message(msg):
             auth.script.market_prices(sys.modules[__name__], prices)
 
 def log(msg):
-    auth.logger.info("log: "+msg)
     if auth.credential:
-        alog = algolog_pb2.Algolog()
-        alog.AlgorunId = auth.credential['AlgorunId']
-        alog.Event = 'start'
-        alog.Level = 'info'
-        alog.Message = msg
-        auth.rpc(auth.credential['Token'], "Algolog", alog)
+        auth.log(auth.credential['Token'], msg)
     else:
         auth.logger.info("cointhink.log aborted. no auth.credential data.")
 

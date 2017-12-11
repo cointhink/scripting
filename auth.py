@@ -34,7 +34,7 @@ def rpc(token, method, payload):
     rpc.Method = method
     rpc.Object.Pack(payload)
     json_msg = MessageToJson(rpc)
-    logger.info("RPC %s", json.dumps(json.loads(json_msg), separators=(',', ':')))
+    logger.info("send %s", json.dumps(json.loads(json_msg), separators=(',', ':')))
     send(json_msg)
 
 def send(json_msg):
