@@ -1,4 +1,4 @@
-# signal-percentage
+# price-percent
 import datetime
 
 price_last = False
