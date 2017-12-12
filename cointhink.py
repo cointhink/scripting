@@ -25,6 +25,7 @@ def on_message(msg):
         settings_json = auth.lambda_dispatch(_lambda)
         _lambdar = lambda_response_pb2.LambdaResponse()
         _lambdar.StateOut = settings_json
+        _lambdar.Token = _lambda.Token
         auth.rpc(auth.credential['Token'], "LambdaResponse", _lambdar)
     if msg['method'] == 'TickTock':
         ticktock = tick_tock_pb2.TickTock()

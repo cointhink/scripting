@@ -16,11 +16,11 @@ def market_prices_auth(token, settings, cointhink, prices):
     for price in prices.Prices:
         if price.Exchange.lower() == exchange:
           if price.Market.lower() == market:
-            received_at = datetime.datetime.strptime(price.ReceivedAt, "%Y-%m-%dT%H:%M:%SZ")
+            received_at = isoparse(price.ReceivedAt)
             new_price = float(price.Amount)
             price_last = settings.get('price_last')
             if price_last:
-              price_delta = new_price - isoparse(price_last[0])
+              price_delta = new_price - price_last[0]
               chg_price_ratio = price_delta / new_price
               chg_time = received_at - isoparse(price_last[1])
               updown = "down"
@@ -32,11 +32,11 @@ def market_prices_auth(token, settings, cointhink, prices):
               cointhink.log(token, log_msg)
               if abs(chg_price_ratio) >= signal_ratio:
                 cointhink.notify(token, log_msg)
-                settings['price_last'] = (new_price, received_at.isoformat())
+                settings['price_last'] = (new_price, iso8601(received_at))
             else:
               log_msg = "{} first price ${}".format(market, new_price)
               cointhink.log(token, log_msg)
-              settings['price_last'] = (new_price, received_at.isoformat())
+              settings['price_last'] = (new_price, iso8601(received_at))
     #return settings
 
 def each_day_auth(token, settings, cointhink, date):
@@ -61,7 +61,14 @@ def time_words(time):
     return "{:.1f} {}".format(value, unit)
 
 def isoparse(dt_str):
-     dt, _, us= dt_str.partition(".")
-     dt= datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
-     us= int(us.rstrip("Z"), 10)
-     return dt + datetime.timedelta(microseconds=us)
+    dt, _, us = dt_str.partition(".")
+    if us:
+      dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
+      us = int(us.rstrip("Z"), 10)
+      dt = dt + datetime.timedelta(microseconds=us)
+    else:
+      dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%SZ")
+    return dt
+
+def iso8601(time):
+    return time.isoformat()+"Z"
