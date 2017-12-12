@@ -1,6 +1,6 @@
 import logging
 import json
-from google.protobuf.json_format import MessageToJson
+from google.protobuf.json_format import MessageToJson, Parse
 from proto import rpc_pb2, algolog_pb2, market_prices_pb2
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,6 @@ def lambda_dispatch(_lambda):
     logger.info("lambda_dispatch %s", _lambda.Method)
     pb_json = MessageToJson(_lambda.Object)
     if _lambda.Method == "MarketPrices":
-        logger.info("MarketPrices go")
         prices = market_prices_pb2.MarketPrices()
         Parse(pb_json, prices)
         if hasattr(script, 'market_prices_auth'):
