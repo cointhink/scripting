@@ -21,10 +21,15 @@ def lambda_dispatch(_lambda):
     logger.info("lambda_dispatch %s", _lambda.Method)
     pb_json = MessageToJson(_lambda.Object)
     if _lambda.Method == "MarketPrices":
+        logger.info("lambda_dispatch MarketPrices pb json %s", pb_json)
+        gprices = json.loads(pb_json)
+        gprices.pop('@type')
+        pb2_json = json.dumps(gprices)
+        logger.info("lambda_dispatch MarketPrices pb2 json %s", pb2_json)
         prices = market_prices_pb2.MarketPrices()
-        Parse(pb_json, prices)
+        Parse(pb2_json, prices)
         if hasattr(script, 'market_prices_auth'):
-            ct = { "settings": _lambda.Settings }
+            ct = { "settings": json.loads(_lambda.StateIn) }
             script.market_prices_auth(_lambda.Token, ct, prices)
 
 def rpc(token, method, payload):
