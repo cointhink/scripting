@@ -18,10 +18,11 @@ def heartbeat():
     auth.rpc(auth.credential['Token'], "Heartbeat", beat)
 
 def on_message(msg):
-    auth.logger.info("recv %s", msg)
+    auth.logger.info("on_message %s", msg)
     pb_json = json.dumps(msg['object'])
     if msg['method'] == 'Lambda':
         _lambda = lambda_pb2.Lambda()
+        Parse(pb_json, _lambda)
         auth.lambda_dispatch(_lambda)
     if msg['method'] == 'TickTock':
         ticktock = tick_tock_pb2.TickTock()

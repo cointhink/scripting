@@ -18,9 +18,10 @@ def init(_credential, _ws, module):
         log('warning: script has no init(cointhink) method')
 
 def lambda_dispatch(_lambda):
-    #pb_json = json.dumps(_lambda.Object)
+    logger.info("lambda_dispatch %s", _lambda.Method)
     pb_json = MessageToJson(_lambda.Object)
     if _lambda.Method == "MarketPrices":
+        logger.info("MarketPrices go")
         prices = market_prices_pb2.MarketPrices()
         Parse(pb_json, prices)
         if hasattr(script, 'market_prices_auth'):
