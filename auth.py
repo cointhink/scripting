@@ -1,3 +1,4 @@
+import sys
 import logging
 import json
 from google.protobuf.json_format import MessageToJson, Parse
@@ -29,8 +30,8 @@ def lambda_dispatch(_lambda):
         prices = market_prices_pb2.MarketPrices()
         Parse(pb2_json, prices)
         if hasattr(script, 'market_prices_auth'):
-            ct = { "settings": json.loads(_lambda.StateIn) }
-            script.market_prices_auth(_lambda.Token, ct, prices)
+            settings = json.loads(_lambda.StateIn)
+            script.market_prices_auth(_lambda.Token, settings, sys.modules[__name__], prices)
 
 def rpc(token, method, payload):
     global logger
