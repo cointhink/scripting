@@ -6,7 +6,7 @@ import auth
 from google.protobuf.json_format import MessageToJson, Parse
 from proto import algolog_pb2, tick_tock_pb2, trade_signal_pb2
 from proto import notify_pb2, rpc_pb2, market_prices_pb2, heartbeat_pb2
-from proto import lambda_pb2
+from proto import lambda_pb2, lambda_response_pb2
 
 def init(_credential, _ws, _settings):
     global settings
@@ -22,7 +22,10 @@ def on_message(msg):
     if msg['method'] == 'Lambda':
         _lambda = lambda_pb2.Lambda()
         Parse(pb_json, _lambda)
-        auth.lambda_dispatch(_lambda)
+        settings_json = auth.lambda_dispatch(_lambda)
+        _lambdar = lambda_response_pb2.LambdaResponse()
+        _lambdar.StateOut = settings_json
+        auth.rpc(auth.credential['Token'], "LambdaResponse", _lambdar)
     if msg['method'] == 'TickTock':
         ticktock = tick_tock_pb2.TickTock()
         Parse(pb_json, ticktock)

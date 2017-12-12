@@ -11,18 +11,18 @@ def init(cointhink):
 
 def market_prices_auth(token, settings, cointhink, prices):
     signal_ratio = float(settings.get('percent_change', 100))/100.0
+    exchange = settings['exchange']
+    market = settings['market']
     for price in prices.Prices:
-        exchange = settings['exchange']
         if price.Exchange.lower() == exchange:
-          market = settings['market']
           if price.Market.lower() == market:
             received_at = datetime.datetime.strptime(price.ReceivedAt, "%Y-%m-%dT%H:%M:%SZ")
             new_price = float(price.Amount)
             price_last = settings.get('price_last')
             if price_last:
-              price_delta = new_price - price_last[0]
+              price_delta = new_price - isoparse(price_last[0])
               chg_price_ratio = price_delta / new_price
-              chg_time = received_at - price_last[1]
+              chg_time = received_at - isoparse(price_last[1])
               updown = "down"
               if chg_price_ratio >= 0:
                 updown = "up"
@@ -32,11 +32,12 @@ def market_prices_auth(token, settings, cointhink, prices):
               cointhink.log(token, log_msg)
               if abs(chg_price_ratio) >= signal_ratio:
                 cointhink.notify(token, log_msg)
-                settings['price_last'] = (new_price, received_at)
+                settings['price_last'] = (new_price, received_at.isoformat())
             else:
               log_msg = "{} first price ${}".format(market, new_price)
               cointhink.log(token, log_msg)
-              settings['price_last'] = (new_price, received_at)
+              settings['price_last'] = (new_price, received_at.isoformat())
+    #return settings
 
 def each_day_auth(token, settings, cointhink, date):
     log_msg = "Day report:"
@@ -58,3 +59,9 @@ def time_words(time):
       value = time.seconds / 60 / 60 / 24
       unit = "days"
     return "{:.1f} {}".format(value, unit)
+
+def isoparse(dt_str):
+     dt, _, us= dt_str.partition(".")
+     dt= datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
+     us= int(us.rstrip("Z"), 10)
+     return dt + datetime.timedelta(microseconds=us)

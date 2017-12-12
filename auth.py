@@ -1,8 +1,9 @@
 import sys
 import logging
 import json
+import datetime
 from google.protobuf.json_format import MessageToJson, Parse
-from proto import rpc_pb2, algolog_pb2, market_prices_pb2
+from proto import rpc_pb2, algolog_pb2, market_prices_pb2, lambda_response_pb2
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -20,6 +21,7 @@ def init(_credential, _ws, module):
 
 def lambda_dispatch(_lambda):
     logger.info("lambda_dispatch %s", _lambda.Method)
+    settings = json.loads(_lambda.StateIn)
     pb_json = MessageToJson(_lambda.Object)
     if _lambda.Method == "MarketPrices":
         logger.info("lambda_dispatch MarketPrices pb json %s", pb_json)
@@ -30,8 +32,8 @@ def lambda_dispatch(_lambda):
         prices = market_prices_pb2.MarketPrices()
         Parse(pb2_json, prices)
         if hasattr(script, 'market_prices_auth'):
-            settings = json.loads(_lambda.StateIn)
             script.market_prices_auth(_lambda.Token, settings, sys.modules[__name__], prices)
+    return json.dumps(settings)
 
 def rpc(token, method, payload):
     global logger
@@ -66,3 +68,4 @@ def notify(token, summary, detail=None):
         notify.Detail = detail
     log("notify: "+summary)
     rpc(token, "Notify", notify)
+
