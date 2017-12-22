@@ -67,6 +67,6 @@ def notify(token, summary, detail=None):
     notify.Summary = summary
     if detail:
         notify.Detail = detail
-    log("notify: "+summary)
+    log(token, "notify: "+summary)
     rpc(token, "Notify", notify)
 
