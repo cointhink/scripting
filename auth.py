@@ -4,6 +4,7 @@ import json
 import datetime
 from google.protobuf.json_format import MessageToJson, Parse
 from proto import rpc_pb2, algolog_pb2, market_prices_pb2, lambda_response_pb2
+from proto import notify_pb2
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
